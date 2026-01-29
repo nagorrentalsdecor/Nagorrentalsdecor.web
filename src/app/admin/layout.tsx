@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { LayoutDashboard, Package, ShoppingBag, Calendar, Settings, LogOut, Mail, Menu, Bell, MapPin, BarChart2, User, ChevronDown, MessageCircle, FileText } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
-import { Link as RouterLink } from "next/link"; // Alias if needed, but Link is already imported
 import { useRouter as useNavigationRouter } from "next/navigation";
 
 // --- Notification Component ---
