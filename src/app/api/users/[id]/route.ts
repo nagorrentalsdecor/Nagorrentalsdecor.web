@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const body = await request.json();
 
     try {
+        const body = await request.json();
         let updateData: any = {};
 
         if (body.resetPassword) {
@@ -35,25 +37,18 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         if (error) throw error;
 
         const { password, ...rest } = data;
-        return NextResponse.json({ ...rest, _id: data.id, isFirstLogin: data.is_first_login });
+        return NextResponse.json({
+            ...rest,
+            _id: data.id,
+            isFirstLogin: data.is_first_login
+        });
 
     } catch (err: any) {
         console.error("User update error:", err.message);
-        const { getDB, saveDB } = await import('@/lib/db');
-        const db = getDB();
-        const index = db.users.findIndex((u: any) => u._id === id);
-        if (index === -1) return NextResponse.json({ error: "User not found" }, { status: 404 });
-
-        if (body.resetPassword) {
-            db.users[index].password = body.newPassword;
-            db.users[index].isFirstLogin = true;
-        } else {
-            db.users[index] = { ...db.users[index], ...body };
-        }
-
-        saveDB(db);
-        const { password, ...rest } = db.users[index];
-        return NextResponse.json(rest);
+        return NextResponse.json(
+            { error: `Failed to update user: ${err.message}` },
+            { status: 500 }
+        );
     }
 }
 
@@ -61,16 +56,20 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     const { id } = await params;
 
     try {
-        const { error } = await supabase.from('users').delete().eq('id', id);
+        const { error } = await supabase
+            .from('users')
+            .delete()
+            .eq('id', id);
+
         if (error) throw error;
+
         return NextResponse.json({ success: true });
+
     } catch (err: any) {
-        const { getDB, saveDB } = await import('@/lib/db');
-        const db = getDB();
-        const newUsers = db.users.filter((u: any) => u._id !== id);
-        if (newUsers.length === db.users.length) return NextResponse.json({ error: "User not found" }, { status: 404 });
-        db.users = newUsers;
-        saveDB(db);
-        return NextResponse.json({ success: true });
+        console.error("User delete error:", err.message);
+        return NextResponse.json(
+            { error: `Failed to delete user: ${err.message}` },
+            { status: 500 }
+        );
     }
 }
