@@ -1,82 +1,36 @@
-# Nagor Rental & Decor - Luxury Event Website
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A modern, full-stack web application for Nagor Rental & Decor, featuring a luxury frontend design, booking system, and admin dashboard.
+## Getting Started
 
-## 🚀 Tech Stack
+First, run the development server:
 
-- **Frontend**: Next.js 15 (App Router), React 19, Tailwind CSS v4, Framer Motion
-- **Backend**: Next.js API Routes (Serverless)
-- **Database**: Supabase (PostgreSQL) - *Migrated from local JSON*
-- **Styling**: Custom Luxury Theme with Tailwind
-- **Icons**: Lucide React
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## 📂 Project Structure
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- `client/` - Frontend application & API Routes
-- `client/supabase_schema.sql` - Database definition
-- `server/` - (Deprecated) Legacy Express Backend
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 🛠️ Getting Started
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### Prerequisites
+## Learn More
 
-- Node.js installed
-- MongoDB installed and running locally (default: `mongodb://127.0.0.1:27017/nagro_rental`)
+To learn more about Next.js, take a look at the following resources:
 
-### 1. Backend Setup
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-1. Navigate to the server directory:
-   ```bash
-   cd server
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Seed the database with initial luxury packages and items:
-   ```bash
-   npm run data:import
-   ```
-   *This will create the `nagro_rental` database and populate it with sample data.*
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-4. Start the server (runs on port 5000):
-   ```bash
-   npm run dev
-   ```
+## Deploy on Vercel
 
-### 2. Frontend Setup
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-1. Open a new terminal and navigate to the client directory:
-   ```bash
-   cd client
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server (runs on port 3000):
-   ```bash
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## 🔑 Admin Access
-
-- **Dashboard URL**: [http://localhost:3000/admin/dashboard](http://localhost:3000/admin/dashboard)
-- **Admin User**: (See `server/data/users.js` for credentials if implementing auth)
-  - Currently, valid credentials are seeded in DB, but the frontend Admin dashboard is accessible directly for demonstration.
-
-## ✨ Features Implemented
-
-- **Luxury Home Page**: Parallax hero, glassmorphism effects, smooth entry animations.
-- **Service Showcase**: Elegant cards displaying wedding, corporate, and party decoration services.
-- **Rental Inventory**: Browsable catalog of chairs, tents, lights, etc.
-- **Responsive Design**: Fully mobile-optimized navbar and layouts.
-- **Admin Dashboard**: Overview of bookings, revenue, and inventory status.
-- **Testimonials**: Auto-playing slider with client reviews.
-
-## 📝 Configuration
-
-- **Database**: Edit `server/config/db.js` to change MongoDB URI.
-- **Images**: Located in `client/public/images`.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
