@@ -53,7 +53,7 @@ const Footer = () => {
                             {siteContent?.footer?.description || "Premium event decoration and equipment rental services in Ghana. Making your special moments unforgettable with elegance, style, and reliability."}
                         </p>
                         <div className="flex space-x-4 pt-2">
-                            <a href="https://instagram.com/nagorrentalsdecor" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all text-white group">
+                            <a href="https://www.instagram.com/nagorrentaldecor?igsh=MWZ4Zjd0NHFyODY4eg==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all text-white group">
                                 <Instagram size={18} className="group-hover:scale-110 transition-transform" />
                             </a>
                             <a href="https://tiktok.com/@nagorrentals_decor" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-black hover:border-black transition-all text-white font-bold group overflow-hidden relative" aria-label="TikTok">

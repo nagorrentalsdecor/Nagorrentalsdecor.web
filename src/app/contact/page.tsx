@@ -4,7 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Send, MapPin, Phone, Mail, Loader2 } from "lucide-react";
+import { Send, MapPin, Phone, Mail, Loader2, Share2, Instagram } from "lucide-react";
 
 const ContactPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -106,6 +106,32 @@ const ContactPage = () => {
                                 <div>
                                     <h4 className="text-lg font-bold text-gray-900 mb-1">Email Address</h4>
                                     <p className="text-gray-600">{contact.email}</p>
+                                </div>
+                            </motion.div>
+
+                            <motion.div
+                                whileHover={{ x: 10 }}
+                                className="flex items-start p-6 bg-white rounded-2xl shadow-sm border border-gray-100 transition-all group"
+                            >
+                                <div className="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center text-pink-600 flex-shrink-0 mr-5 group-hover:bg-pink-600 group-hover:text-white transition-colors">
+                                    <Share2 size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-bold text-gray-900 mb-2">Follow Us</h4>
+                                    <div className="flex space-x-5">
+                                        <a href="https://www.instagram.com/nagorrentaldecor?igsh=MWZ4Zjd0NHFyODY4eg==" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-600 hover:text-pink-600 transition-colors font-medium group/link">
+                                            <div className="p-1.5 bg-gray-100 rounded-full mr-2 group-hover/link:bg-pink-100 transition-colors">
+                                                <Instagram size={16} />
+                                            </div>
+                                            Instagram
+                                        </a>
+                                        <a href="https://tiktok.com/@nagorrentals_decor" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-600 hover:text-black transition-colors font-medium group/link">
+                                            <div className="p-1.5 bg-gray-100 rounded-full mr-2 group-hover/link:bg-gray-200 transition-colors">
+                                                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" /></svg>
+                                            </div>
+                                            TikTok
+                                        </a>
+                                    </div>
                                 </div>
                             </motion.div>
                         </div>
