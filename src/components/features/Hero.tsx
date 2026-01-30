@@ -4,10 +4,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const Hero = () => {
-    const [content, setContent] = useState<any>(null);
+const Hero = ({ initialContent }: { initialContent?: any }) => {
+    const [content, setContent] = useState<any>(initialContent || null);
 
     useEffect(() => {
+        if (initialContent) {
+            setContent(initialContent);
+            return;
+        }
+
         const fetchContent = async () => {
             try {
                 const res = await fetch('/api/content');
@@ -18,7 +23,7 @@ const Hero = () => {
             }
         };
         fetchContent();
-    }, []);
+    }, [initialContent]);
 
     const hero = content || {
         badge: "Premium Event Rentals",

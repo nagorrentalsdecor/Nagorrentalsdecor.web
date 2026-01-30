@@ -23,43 +23,28 @@ export default function Home() {
       try {
         console.log("Fetching home page data...");
 
-        // Fetch packages
-        try {
-          const resPackages = await fetch("/api/packages");
-          if (resPackages.ok) {
-            const packages = await resPackages.json();
-            console.log("Packages fetched:", packages.length);
-            setFeaturedServices(Array.isArray(packages) ? packages.slice(0, 3) : []);
-          } else {
-            console.error("Failed to fetch packages:", resPackages.status);
-          }
-        } catch (e) {
-          console.error("Error fetching packages:", e);
+        const [resPackages, resItems, resContent] = await Promise.all([
+          fetch("/api/packages").catch(err => { console.error("Packages fetch failed", err); return null; }),
+          fetch("/api/items").catch(err => { console.error("Items fetch failed", err); return null; }),
+          fetch("/api/content").catch(err => { console.error("Content fetch failed", err); return null; })
+        ]);
+
+        // Process Packages
+        if (resPackages?.ok) {
+          const packages = await resPackages.json();
+          setFeaturedServices(Array.isArray(packages) ? packages.slice(0, 3) : []);
         }
 
-        // Fetch items
-        try {
-          const resItems = await fetch("/api/items");
-          if (resItems.ok) {
-            const items = await resItems.json();
-            console.log("Items fetched:", items.length);
-            setFeaturedRentals(Array.isArray(items) ? items.slice(0, 4) : []);
-          } else {
-            console.error("Failed to fetch items:", resItems.status);
-          }
-        } catch (e) {
-          console.error("Error fetching items:", e);
+        // Process Items
+        if (resItems?.ok) {
+          const items = await resItems.json();
+          setFeaturedRentals(Array.isArray(items) ? items.slice(0, 4) : []);
         }
 
-        // Fetch content
-        try {
-          const resContent = await fetch("/api/content");
-          if (resContent.ok) {
-            const content = await resContent.json();
-            setSiteContent(content);
-          }
-        } catch (e) {
-          console.error("Error fetching content:", e);
+        // Process Content
+        if (resContent?.ok) {
+          const content = await resContent.json();
+          setSiteContent(content);
         }
 
       } catch (error) {
@@ -106,7 +91,7 @@ export default function Home() {
     <main className="min-h-screen bg-white text-gray-800 overflow-x-hidden">
       <Navbar />
 
-      <Hero />
+      <Hero initialContent={siteContent?.hero} />
 
       {/* Featured Services Section */}
       <section className="py-24 container mx-auto px-4 md:px-8 bg-white">
