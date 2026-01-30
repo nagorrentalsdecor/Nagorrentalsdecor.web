@@ -12,7 +12,7 @@ const StatCard = ({ title, value, icon: Icon, color, trend }: any) => (
     <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white p-6 rounded-2xl border border-gray-100/50 hover:border-gray-200 hover:shadow-sm transition-all duration-300"
+        className="bg-white p-6 rounded-2xl border border-purple-100 hover:border-purple-200 hover:shadow-sm transition-all duration-300"
     >
         <div className="flex items-center justify-between mb-4">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${color.replace('text', 'bg')}/10 text-${color.split('-')[1]}-600`}>
@@ -20,7 +20,7 @@ const StatCard = ({ title, value, icon: Icon, color, trend }: any) => (
             </div>
             {trend && <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">{trend}</span>}
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 tracking-tight">{value}</h3>
+        <h3 className="text-2xl font-bold text-secondary tracking-tight">{value}</h3>
         <p className="text-sm font-medium text-gray-400 mt-1">{title}</p>
     </motion.div>
 );
@@ -29,8 +29,8 @@ const CategoryTab = ({ active, label, onClick }: any) => (
     <button
         onClick={onClick}
         className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border ${active
-            ? "bg-gray-900 text-white border-gray-900"
-            : "bg-transparent text-gray-500 border-gray-200 hover:border-gray-300 hover:text-gray-700"
+            ? "bg-secondary text-white border-secondary"
+            : "bg-transparent text-gray-500 border-gray-200 hover:border-purple-200 hover:text-purple-700"
             }`}
     >
         {label}
@@ -170,8 +170,8 @@ export default function InventoryPage() {
 
             {/* Controls */}
             <div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-6">
-                <div className="w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-none">
-                    <div className="flex space-x-2">
+                <div className="w-full md:w-auto">
+                    <div className="flex flex-wrap gap-2">
                         {categories.map(cat => (
                             <CategoryTab
                                 key={cat}

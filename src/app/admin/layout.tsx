@@ -154,6 +154,7 @@ export default function AdminLayout({
         { name: "messages", href: "/admin/messages", icon: Mail },
         { name: "testimonials", href: "/admin/testimonials", icon: MessageCircle },
         { name: "content", href: "/admin/content", icon: FileText },
+        { name: "sales", href: "/admin/sales", icon: BarChart2 },
         { name: "booking", href: "/admin/bookings", icon: Calendar },
         { name: "inventory", href: "/admin/inventory", icon: ShoppingBag },
         { name: "settings", href: "/admin/settings", icon: Settings },

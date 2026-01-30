@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Instagram, Twitter, Phone, Mail, MapPin } from "lucide-react";
 
 const Footer = () => {
@@ -55,8 +56,13 @@ const Footer = () => {
                             <a href="https://instagram.com/nagorrentalsdecor" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all text-white group">
                                 <Instagram size={18} className="group-hover:scale-110 transition-transform" />
                             </a>
-                            <a href="https://tiktok.com/@nagorrentals_decor" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-black hover:border-black transition-all text-white font-bold group" aria-label="TikTok">
-                                <span className="group-hover:scale-110 transition-transform text-xs">Tt</span>
+                            <a href="https://tiktok.com/@nagorrentals_decor" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-black hover:border-black transition-all text-white font-bold group overflow-hidden relative" aria-label="TikTok">
+                                <Image
+                                    src="/images/tiktok.png"
+                                    alt="TikTok"
+                                    fill
+                                    className="object-cover group-hover:scale-110 transition-transform"
+                                />
                             </a>
                         </div>
                     </div>

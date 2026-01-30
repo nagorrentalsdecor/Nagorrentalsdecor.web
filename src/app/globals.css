@@ -12,15 +12,28 @@
 
   /* Custom Animations */
   --animate-fade-in-up: fadeInUp 0.8s ease-out forwards;
+  /* Color Overrides for Purple Theme */
+  --color-gray-950: #2E1065;
+  --color-gray-900: #2E1065;
+  --color-gray-800: #4C1D95;
+  --color-gray-700: #581C87;
+  --color-gray-600: #6B21A8;
+  --color-slate-900: #2E1065;
+  --color-slate-800: #4C1D95;
 }
 
 :root {
   --background: #FFFFFF;
-  --foreground: #2E1065; /* Dark Purple for text */
-  --primary: #9333EA; /* Purple 600 */
-  --primary-hover: #7E22CE; /* Purple 700 */
-  --secondary: #2E1065; /* Purple 950 */
-  --accent: #F3E8FF; /* Purple 100 */
+  --foreground: #2E1065;
+  /* Dark Purple for text */
+  --primary: #9333EA;
+  /* Purple 600 */
+  --primary-hover: #7E22CE;
+  /* Purple 700 */
+  --secondary: #2E1065;
+  /* Purple 950 */
+  --accent: #F3E8FF;
+  /* Purple 100 */
 
   /* Gradients */
   --primary-gradient: linear-gradient(135deg, #9333EA 0%, #D8B4FE 50%, #7E22CE 100%);
@@ -97,18 +110,19 @@ h6 {
 
 /* Mobile Responsive Fixes */
 @media (max-width: 768px) {
+
   /* Ensure images don't blur on mobile */
   img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
-  
+
   /* Prevent text overflow */
   * {
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
-  
+
   /* Fix background images on mobile */
   .bg-fixed {
     background-attachment: scroll !important;
@@ -117,13 +131,16 @@ h6 {
 
 /* iOS specific fixes */
 @supports (-webkit-touch-callout: none) {
+
   /* Fix for iOS Safari viewport height */
   .h-screen {
     height: -webkit-fill-available;
   }
-  
+
   /* Prevent zoom on input focus */
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     font-size: 16px !important;
   }
 }

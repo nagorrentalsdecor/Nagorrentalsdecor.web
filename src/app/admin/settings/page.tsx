@@ -202,6 +202,7 @@ export default function SettingsPage() {
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
+                        {/* ... table content remains same ... */}
                         <thead>
                             <tr className="border-b border-gray-100">
                                 <th className="pb-4 font-bold text-gray-400 text-xs uppercase tracking-wider pl-4">User</th>
@@ -240,6 +241,7 @@ export default function SettingsPage() {
                                             </span>
                                         </td>
                                         <td className="py-4 text-right pr-4">
+                                            {/* Actions... */}
                                             <div className="flex items-center justify-end gap-2">
                                                 {!isSuperAdmin && (
                                                     <>
@@ -254,6 +256,7 @@ export default function SettingsPage() {
                                                         >
                                                             <Edit2 size={16} />
                                                         </button>
+                                                        {/* Rest of buttons */}
                                                         <button
                                                             onClick={async () => {
                                                                 if (!confirm("Reset password for " + user.name + "?")) return;
@@ -290,6 +293,34 @@ export default function SettingsPage() {
                             })}
                         </tbody>
                     </table>
+                </div>
+            </motion.div>
+
+            {/* System Management */}
+            <motion.div variants={item} className="mt-8 bg-red-50 p-8 rounded-2xl shadow-sm border border-red-100">
+                <h3 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+                    <Trash2 className="mr-2" /> Danger Zone
+                </h3>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <p className="font-bold text-red-800">Clear All Monitoring Data</p>
+                        <p className="text-sm text-red-600">This will delete all bookings, sales history, and dashboard stats. Cannot be undone.</p>
+                    </div>
+                    <button
+                        onClick={async () => {
+                            if (confirm("WARNING: Are you sure you want to DELETE ALL DATA? This action cannot be undone.")) {
+                                if (confirm("Please confirm again. Type 'DELETE' mentally and click OK.")) {
+                                    setIsLoading(true);
+                                    await fetch('/api/admin/reset', { method: 'DELETE' });
+                                    alert("System data cleared.");
+                                    window.location.reload();
+                                }
+                            }
+                        }}
+                        className="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 shadow-lg shadow-red-200 transition-colors"
+                    >
+                        Reset System Data
+                    </button>
                 </div>
             </motion.div>
 
