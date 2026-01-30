@@ -35,12 +35,12 @@ const Footer = () => {
             <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div className="container mx-auto px-4 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12 sm:mb-16 text-center sm:text-left">
                     {/* Brand Info */}
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6 flex flex-col items-center sm:items-start">
                         <Link href="/" className="inline-block">
-                            <h2 className="text-3xl font-heading font-bold tracking-tight">
+                            <h2 className="text-2xl sm:text-3xl font-heading font-bold tracking-tight">
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-200">Nagor</span>
                                 <span className="text-white"> Rental & Decor</span>
                             </h2>
@@ -48,7 +48,7 @@ const Footer = () => {
                                 Reliable Rentals, Remarkable Decor
                             </p>
                         </Link>
-                        <p className="text-gray-400 font-body leading-relaxed text-sm">
+                        <p className="text-gray-400 font-body leading-relaxed text-sm max-w-xs mx-auto sm:mx-0">
                             {siteContent?.footer?.description || "Premium event decoration and equipment rental services in Ghana. Making your special moments unforgettable with elegance, style, and reliability."}
                         </p>
                         <div className="flex space-x-4 pt-2">
@@ -63,49 +63,52 @@ const Footer = () => {
 
                     {/* Quick Links */}
                     <div>
-                        <h3 className="text-lg font-heading font-bold mb-6 text-white border-b border-primary/30 pb-2 inline-block">Quick Links</h3>
-                        <ul className="space-y-3 font-body text-gray-400">
-                            <li><Link href="/" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Home</Link></li>
-                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Decoration Services</Link></li>
-                            <li><Link href="/rentals" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Rental Items</Link></li>
-                            <li><Link href="/about" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>About Us</Link></li>
-                            <li><Link href="/contact" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Contact</Link></li>
+                        <h3 className="text-lg font-heading font-bold mb-4 sm:mb-6 text-white border-b border-primary/30 pb-2 inline-block">Quick Links</h3>
+                        <ul className="space-y-3 font-body text-gray-400 flex flex-col items-center sm:items-start">
+                            <li><Link href="/" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Home</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Decoration Services</Link></li>
+                            <li><Link href="/rentals" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Rental Items</Link></li>
+                            <li><Link href="/about" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>About Us</Link></li>
+                            <li><Link href="/contact" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Contact</Link></li>
                         </ul>
                     </div>
 
                     {/* Services */}
                     <div>
-                        <h3 className="text-lg font-heading font-bold mb-6 text-white border-b border-primary/30 pb-2 inline-block">Our Services</h3>
-                        <ul className="space-y-3 font-body text-gray-400">
-                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Wedding Decoration</Link></li>
-                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Corporate Events</Link></li>
-                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Private Parties</Link></li>
-                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Funeral Decor</Link></li>
-                            <li><Link href="/rentals" className="hover:text-primary transition-colors flex items-center"><span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Equipment Rental</Link></li>
+                        <h3 className="text-lg font-heading font-bold mb-4 sm:mb-6 text-white border-b border-primary/30 pb-2 inline-block">Our Services</h3>
+                        <ul className="space-y-3 font-body text-gray-400 flex flex-col items-center sm:items-start">
+                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Wedding Decoration</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Corporate Events</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Birthday Parties</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Engagements</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Private Parties</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Funeral Decor</Link></li>
+                            <li><Link href="/rentals" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>Equipment Rental</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors flex items-center"><span className="hidden sm:block w-1.5 h-1.5 bg-primary rounded-full mr-2 opacity-0 hover:opacity-100 transition-opacity"></span>etc</Link></li>
                         </ul>
                     </div>
 
                     {/* Contact Info */}
                     <div>
-                        <h3 className="text-lg font-heading font-bold mb-6 text-white border-b border-primary/30 pb-2 inline-block">Contact Us</h3>
-                        <ul className="space-y-5 font-body text-gray-400">
-                            <li className="flex items-start group">
-                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mr-3 flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <h3 className="text-lg font-heading font-bold mb-4 sm:mb-6 text-white border-b border-primary/30 pb-2 inline-block">Contact Us</h3>
+                        <ul className="space-y-5 font-body text-gray-400 flex flex-col items-center sm:items-start">
+                            <li className="flex items-start group text-center sm:text-left">
+                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mr-0 sm:mr-3 mb-2 sm:mb-0 flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
                                     <MapPin size={16} />
                                 </div>
-                                <span className="text-sm">{contact.address}</span>
+                                <span className="text-sm max-w-[200px] sm:max-w-none">{contact.address}</span>
                             </li>
-                            <li className="flex items-center group">
-                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mr-3 flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                            <li className="flex items-center group flex-col sm:flex-row">
+                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mr-0 sm:mr-3 mb-2 sm:mb-0 flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
                                     <Phone size={16} />
                                 </div>
-                                <div className="flex flex-col text-sm">
+                                <div className="flex flex-col text-sm text-center sm:text-left">
                                     <span>{contact.phone}</span>
                                     {contact.phoneSecondary && <span>{contact.phoneSecondary}</span>}
                                 </div>
                             </li>
-                            <li className="flex items-center group">
-                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mr-3 flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                            <li className="flex items-center group flex-col sm:flex-row">
+                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mr-0 sm:mr-3 mb-2 sm:mb-0 flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
                                     <Mail size={16} />
                                 </div>
                                 <span className="text-sm">{contact.email}</span>

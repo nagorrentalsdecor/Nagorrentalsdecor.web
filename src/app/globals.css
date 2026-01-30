@@ -28,6 +28,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
 }
 
 body {
@@ -36,6 +38,9 @@ body {
   font-family: var(--font-outfit), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+  width: 100%;
 }
 
 h1,
@@ -88,4 +93,37 @@ h6 {
 
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+/* Mobile Responsive Fixes */
+@media (max-width: 768px) {
+  /* Ensure images don't blur on mobile */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Prevent text overflow */
+  * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* Fix background images on mobile */
+  .bg-fixed {
+    background-attachment: scroll !important;
+  }
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix for iOS Safari viewport height */
+  .h-screen {
+    height: -webkit-fill-available;
+  }
+  
+  /* Prevent zoom on input focus */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }

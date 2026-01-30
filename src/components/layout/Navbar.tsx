@@ -45,8 +45,8 @@ const Navbar = () => {
             <div className="container mx-auto px-4 md:px-8 flex justify-between items-center">
                 {/* Logo */}
                 <Link href="/" className="flex flex-col">
-                    <div className="text-2xl font-heading font-bold tracking-wide">
-                        <span className={scrolled ? "text-primary" : "text-primary"}>Nagor</span> Rental & Decor
+                    <div className="text-3xl sm:text-4xl font-heading font-bold tracking-wide">
+                        <span className={scrolled ? "text-primary" : "text-white"}>Nagor</span> Rental & Decor
                     </div>
                     <span className={cn("text-[10px] tracking-[0.2em] uppercase font-medium", scrolled ? "text-gray-400" : "text-white/70")}>
                         Reliable Rentals, Remarkable Decor

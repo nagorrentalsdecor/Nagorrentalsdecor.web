@@ -68,14 +68,7 @@ const ProductCard = ({ id, name, category, image, pricePerDay, availableQuantity
                     {name}
                 </h3>
 
-                <div className="flex justify-between items-center mt-3">
-                    <div>
-                        <span className="text-lg font-bold text-secondary">
-                            GH₵ {pricePerDay.toFixed(2)}
-                        </span>
-                        <span className="text-xs text-gray-500 ml-1">/ day</span>
-                    </div>
-
+                <div className="flex justify-end items-center mt-3">
                     <button
                         onClick={handleAddToCart}
                         disabled={availableQuantity === 0}

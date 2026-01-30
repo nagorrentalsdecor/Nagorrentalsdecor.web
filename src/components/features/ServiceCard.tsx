@@ -41,24 +41,11 @@ const ServiceCard = ({ title, description, image, price, link }: ServiceCardProp
                 <h3 className="text-2xl font-heading font-bold mb-3 text-secondary group-hover:text-primary transition-colors">
                     {title}
                 </h3>
-                <p className="text-gray-500 mb-6 font-body leading-relaxed line-clamp-2">
+                <p className="text-gray-500 mb-6 font-body leading-relaxed line-clamp-3">
                     {description}
                 </p>
 
-                <div className="flex justify-between items-end border-t border-gray-100 pt-6">
-                    <div className="flex flex-col">
-                        <span className="text-xs text-gray-400 uppercase tracking-widest font-medium mb-1">Starting from</span>
-                        {price ? (
-                            <span className="text-xl font-bold text-gradient-primary">
-                                GH₵ {price.toLocaleString()}
-                            </span>
-                        ) : (
-                            <span className="text-lg font-bold text-gray-300">
-                                Custom Quote
-                            </span>
-                        )}
-                    </div>
-
+                <div className="flex justify-end items-center border-t border-gray-100 pt-6">
                     <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                         <ArrowRight size={18} className="transform group-hover:-rotate-45 transition-transform duration-300" />
                     </div>
