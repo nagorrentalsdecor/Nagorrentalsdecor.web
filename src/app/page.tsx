@@ -117,15 +117,11 @@ export default function Home() {
           />
         </motion.div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+        <div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
         >
           {featuredServices.map((service) => (
-            <motion.div key={service._id || service.id} variants={item}>
+            <div key={service._id || service.id}>
               <ServiceCard
                 title={service.name}
                 description={service.description}
@@ -133,9 +129,9 @@ export default function Home() {
                 price={service.price}
                 link={"/book"}
               />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
         <div className="mt-16 text-center">
           <Link
@@ -163,15 +159,11 @@ export default function Home() {
             />
           </motion.div>
 
-          <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+          <div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
           >
             {featuredRentals.map((rental) => (
-              <motion.div key={rental._id || rental.id} variants={item}>
+              <div key={rental._id || rental.id}>
                 <ProductCard
                   id={rental._id || rental.id}
                   name={rental.name}
@@ -180,9 +172,9 @@ export default function Home() {
                   pricePerDay={rental.pricePerDay || rental.price}
                   availableQuantity={rental.quantity}
                 />
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
 
           <div className="mt-16 text-center">
             <Link
