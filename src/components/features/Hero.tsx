@@ -40,20 +40,13 @@ const Hero = () => {
 
             {/* Content */}
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white flex flex-col items-center pt-32 pb-20 sm:py-0">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1 }}
-                    className="mb-3 sm:mb-4 inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm text-xs sm:text-sm font-medium tracking-widest uppercase"
-                >
-                    {hero.badge}
-                </motion.div>
+
 
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 1 }}
-                    className="text-white/90 font-heading text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4"
+                    className="text-white/90 font-heading text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-4 sm:mb-6"
                 >
                     Reliable Rentals, Remarkable Decor
                 </motion.p>
@@ -62,7 +55,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-bold mb-6 sm:mb-8 leading-tight drop-shadow-2xl px-2"
+                    className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-bold mb-6 sm:mb-8 leading-tight drop-shadow-2xl px-2 [text-wrap:balance]"
                 >
                     {hero.title.split(' with ').map((part: string, i: number) => (
                         <span key={i}>
@@ -76,7 +69,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
-                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-body font-light max-w-3xl mx-auto mb-8 sm:mb-12 text-gray-100/90 leading-relaxed px-4"
+                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-body font-light max-w-2xl mx-auto mb-8 sm:mb-12 text-gray-100/90 leading-relaxed px-4 [text-wrap:balance]"
                 >
                     {hero.subtitle}
                 </motion.p>
