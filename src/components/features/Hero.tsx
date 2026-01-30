@@ -39,7 +39,7 @@ const Hero = () => {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white flex flex-col items-center py-20 sm:py-0">
+            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white flex flex-col items-center pt-32 pb-20 sm:py-0">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -62,7 +62,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-heading font-bold mb-6 sm:mb-8 leading-tight drop-shadow-2xl px-2"
+                    className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-bold mb-6 sm:mb-8 leading-tight drop-shadow-2xl px-2"
                 >
                     {hero.title.split(' with ').map((part: string, i: number) => (
                         <span key={i}>
