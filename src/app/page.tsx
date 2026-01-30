@@ -23,28 +23,37 @@ export default function Home() {
       try {
         console.log("Fetching home page data...");
 
-        const [resPackages, resItems, resContent] = await Promise.all([
-          fetch("/api/packages").catch(err => { console.error("Packages fetch failed", err); return null; }),
-          fetch("/api/items").catch(err => { console.error("Items fetch failed", err); return null; }),
-          fetch("/api/content").catch(err => { console.error("Content fetch failed", err); return null; })
-        ]);
-
-        // Process Packages
-        if (resPackages?.ok) {
-          const packages = await resPackages.json();
-          setFeaturedServices(Array.isArray(packages) ? packages.slice(0, 3) : []);
+        // Fetch packages
+        try {
+          const res = await fetch("/api/packages");
+          if (res.ok) {
+            const data = await res.json();
+            setFeaturedServices(Array.isArray(data) ? data.slice(0, 3) : []);
+          }
+        } catch (e) {
+          console.error("Packages fetch error:", e);
         }
 
-        // Process Items
-        if (resItems?.ok) {
-          const items = await resItems.json();
-          setFeaturedRentals(Array.isArray(items) ? items.slice(0, 4) : []);
+        // Fetch items
+        try {
+          const res = await fetch("/api/items");
+          if (res.ok) {
+            const data = await res.json();
+            setFeaturedRentals(Array.isArray(data) ? data.slice(0, 4) : []);
+          }
+        } catch (e) {
+          console.error("Items fetch error:", e);
         }
 
-        // Process Content
-        if (resContent?.ok) {
-          const content = await resContent.json();
-          setSiteContent(content);
+        // Fetch content
+        try {
+          const res = await fetch("/api/content");
+          if (res.ok) {
+            const data = await res.json();
+            setSiteContent(data);
+          }
+        } catch (e) {
+          console.error("Content fetch error:", e);
         }
 
       } catch (error) {
