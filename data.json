@@ -464,7 +464,7 @@
       "sections": [
         {
           "title": "1. Identification & Booking",
-          "content": "A valid ID is required for identification during pickup. Booked and paid items cannot be cancelled; if cancelled, a 50% deduction will be applied to the refund."
+          "content": "A valid ID is required for identification before booking. Booked and paid items cannot be cancelled; if cancelled, a 50% deduction will be applied to the refund."
         },
         {
           "title": "2. Security Deposit",
