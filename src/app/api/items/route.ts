@@ -12,6 +12,13 @@ export async function GET() {
 
         if (error) throw error;
 
+        // If Supabase table is empty, fallback to local DB
+        if (!supaItems || supaItems.length === 0) {
+            console.warn("Supabase items empty, falling back to local DB");
+            const { getDB } = await import('@/lib/db');
+            return NextResponse.json(getDB().items);
+        }
+
         // Map snake_case to camelCase for the frontend
         const items = supaItems.map((item: any) => ({
             ...item,

@@ -12,6 +12,13 @@ export async function GET() {
 
         if (error) throw error;
 
+        // If Supabase table is empty, fallback to local DB
+        if (!supaPackages || supaPackages.length === 0) {
+            console.warn("Supabase packages empty, falling back to local DB");
+            const { getDB } = await import('@/lib/db');
+            return NextResponse.json(getDB().packages);
+        }
+
         const packages = supaPackages.map((p: any) => ({
             ...p,
             _id: p.id,
