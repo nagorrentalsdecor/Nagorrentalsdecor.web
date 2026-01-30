@@ -14,12 +14,30 @@ export default function MessagesPage() {
 
     const markAsRead = async (id: string) => {
         try {
-            await fetch(`/api/messages/${id}`, { method: 'PUT' });
+            await fetch(`/api/messages/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify({ isRead: true })
+            });
             // Update local state
             setMessages(prev => prev.map(m => m._id === id ? { ...m, isRead: true } : m));
+            setFilteredMessages(prev => prev.map(m => m._id === id ? { ...m, isRead: true } : m));
             // Dispatch custom event to notify Bell (optional, but good for UI sync)
             window.dispatchEvent(new Event('messageRead'));
         } catch (e) { console.error("Failed to mark read", e); }
+    };
+
+    const deleteMessage = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this message?")) return;
+        try {
+            await fetch(`/api/messages/${id}`, { method: 'DELETE' });
+            setMessages(prev => prev.filter(m => m._id !== id));
+            setFilteredMessages(prev => prev.filter(m => m._id !== id));
+            // Trigger refresh
+            window.dispatchEvent(new Event('messageRead'));
+        } catch (e) {
+            console.error(e);
+            alert("Failed to delete");
+        }
     };
 
     useEffect(() => {
@@ -132,6 +150,13 @@ export default function MessagesPage() {
                                                 title="Read Message"
                                             >
                                                 <Eye size={18} />
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); deleteMessage(msg._id); }}
+                                                className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors ml-1"
+                                                title="Delete Message"
+                                            >
+                                                <Trash2 size={18} />
                                             </button>
                                         </td>
                                     </tr>
