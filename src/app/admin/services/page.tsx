@@ -18,7 +18,7 @@ export default function ServicesPage() {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
-        price: 0,
+        price: "",
         images: ["/images/wedding.png"],
         isFeatured: false
     });
@@ -42,7 +42,7 @@ export default function ServicesPage() {
             setFormData({
                 name: pkg.name,
                 description: pkg.description || "",
-                price: pkg.price,
+                price: String(pkg.price),
                 images: pkg.images,
                 isFeatured: pkg.isFeatured || false
             });
@@ -51,7 +51,7 @@ export default function ServicesPage() {
             setFormData({
                 name: "",
                 description: "",
-                price: 0,
+                price: "",
                 images: ["/images/wedding.png"],
                 isFeatured: false
             });
@@ -74,10 +74,15 @@ export default function ServicesPage() {
         e.preventDefault();
         setIsLoading(true);
         try {
+            const dataToSubmit = {
+                ...formData,
+                price: Number(formData.price)
+            };
+
             if (editingPkg) {
-                await updatePackage(editingPkg._id, formData);
+                await updatePackage(editingPkg._id, dataToSubmit);
             } else {
-                await createPackage(formData);
+                await createPackage(dataToSubmit);
             }
             await fetchPackages();
             setIsModalOpen(false);
@@ -291,7 +296,7 @@ export default function ServicesPage() {
                                     placeholder="0.00"
                                     className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                     value={formData.price}
-                                    onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                 />
                             </div>
                         </div>

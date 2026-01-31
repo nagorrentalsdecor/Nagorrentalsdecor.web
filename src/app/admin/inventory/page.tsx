@@ -50,8 +50,8 @@ export default function InventoryPage() {
     const [formData, setFormData] = useState({
         name: "",
         category: "Chairs",
-        pricePerDay: 0,
-        quantity: 0,
+        pricePerDay: "",
+        quantity: "",
         images: ["/images/chair-gold.png"]
     });
 
@@ -89,8 +89,8 @@ export default function InventoryPage() {
             setFormData({
                 name: item.name,
                 category: item.category,
-                pricePerDay: item.pricePerDay,
-                quantity: item.quantity,
+                pricePerDay: String(item.pricePerDay),
+                quantity: String(item.quantity),
                 images: item.images
             });
         } else {
@@ -98,8 +98,8 @@ export default function InventoryPage() {
             setFormData({
                 name: "",
                 category: "Chairs",
-                pricePerDay: 0,
-                quantity: 0,
+                pricePerDay: "",
+                quantity: "",
                 images: ["/images/chair-gold.png"]
             });
         }
@@ -121,10 +121,15 @@ export default function InventoryPage() {
         e.preventDefault();
         setIsLoading(true);
         try {
+            const dataToSubmit = {
+                ...formData,
+                pricePerDay: Number(formData.pricePerDay),
+                quantity: Number(formData.quantity)
+            };
             if (editingItem) {
-                await updateItem(editingItem._id, formData);
+                await updateItem(editingItem._id, dataToSubmit);
             } else {
-                await createItem(formData);
+                await createItem(dataToSubmit);
             }
             await fetchItems();
             setIsModalOpen(false);
@@ -137,8 +142,8 @@ export default function InventoryPage() {
 
     // Derived Stats
     const totalItems = items.length;
-    const totalValue = items.reduce((acc, item) => acc + (item.pricePerDay * item.quantity), 0);
-    const lowStock = items.filter(item => item.quantity < 5).length;
+    const totalValue = items.reduce((acc, item) => acc + (Number(item.pricePerDay || 0) * Number(item.quantity || 0)), 0);
+    const lowStock = items.filter(item => Number(item.quantity || 0) < 5).length;
 
     const categories = ["All", "Chairs", "Tents", "Tables", "Lighting", "Backdrops", "Flooring", "Decor", "Tableware", "Kitchen ware", "Flowers", "Systems", "Electronics"];
 
@@ -387,7 +392,7 @@ export default function InventoryPage() {
                                                         type="number"
                                                         className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl outline-none transition-all font-medium"
                                                         value={formData.pricePerDay}
-                                                        onChange={(e) => setFormData({ ...formData, pricePerDay: Number(e.target.value) })}
+                                                        onChange={(e) => setFormData({ ...formData, pricePerDay: e.target.value })}
                                                     />
                                                 </div>
                                             </div>
@@ -398,7 +403,7 @@ export default function InventoryPage() {
                                                     type="number"
                                                     className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl outline-none transition-all font-medium"
                                                     value={formData.quantity}
-                                                    onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
+                                                    onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                                                 />
                                             </div>
                                         </div>
