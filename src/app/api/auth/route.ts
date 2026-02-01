@@ -53,13 +53,15 @@ export async function PUT(request: Request) {
     const { email, newPassword } = await request.json();
 
     try {
-        const { error } = await supabase
+        const { data: user, error } = await supabase
             .from('users')
             .update({ password: newPassword, is_first_login: false })
-            .eq('email', email);
+            .eq('email', email)
+            .select('*')
+            .single();
 
         if (error) throw error;
-        return NextResponse.json({ success: true });
+        return NextResponse.json({ success: true, user });
     } catch (err) {
         const { getDB, saveDB } = await import('@/lib/db');
         const db = getDB();
@@ -68,7 +70,8 @@ export async function PUT(request: Request) {
             db.users[index].password = newPassword;
             db.users[index].isFirstLogin = false;
             saveDB(db);
-            return NextResponse.json({ success: true });
+            const { password: _, ...userInfo } = db.users[index];
+            return NextResponse.json({ success: true, user: userInfo });
         }
         return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
     }

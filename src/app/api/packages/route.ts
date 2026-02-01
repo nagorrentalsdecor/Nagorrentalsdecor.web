@@ -4,19 +4,25 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+    console.log('[Packages API] GET request received');
     try {
         const { data: supaPackages, error } = await supabase
             .from('packages')
             .select('*')
             .order('name');
 
-        if (error) throw error;
+        if (error) {
+            console.log('[Packages API] Supabase error:', error.message);
+            throw error;
+        }
 
         // If Supabase table is empty, fallback to local DB
         if (!supaPackages || supaPackages.length === 0) {
-            console.warn("Supabase packages empty, falling back to local DB");
+            console.warn("[Packages API] Supabase packages empty, falling back to local DB");
             const { getDB } = await import('@/lib/db');
-            return NextResponse.json(getDB().packages);
+            const localPackages = getDB().packages;
+            console.log('[Packages API] Returning local packages:', localPackages.length);
+            return NextResponse.json(localPackages);
         }
 
         const packages = supaPackages.map((p: any) => ({
@@ -25,17 +31,20 @@ export async function GET() {
             isFeatured: p.is_featured
         }));
 
+        console.log('[Packages API] Returning Supabase packages:', packages.length);
         return NextResponse.json(packages);
-    } catch (err) {
+    } catch (err: any) {
+        console.log('[Packages API] Catch block - using local DB. Error:', err.message);
         const { getDB } = await import('@/lib/db');
-        return NextResponse.json(getDB().packages);
+        const localPackages = getDB().packages;
+        console.log('[Packages API] Returning local packages from catch:', localPackages.length);
+        return NextResponse.json(localPackages);
     }
 }
 
 export async function POST(request: Request) {
+    const body = await request.json().catch(() => ({}));
     try {
-        const body = await request.json();
-
         const dbPayload = {
             name: body.name,
             description: body.description,
@@ -57,7 +66,6 @@ export async function POST(request: Request) {
         console.error("Supabase package save error:", err.message);
         const { getDB, saveDB } = await import('@/lib/db');
         const db = getDB();
-        const body = await request.json().catch(() => ({}));
         const newPkg = { ...body, _id: body._id || Math.random().toString(36).substr(2, 9) };
 
         if (body._id) {

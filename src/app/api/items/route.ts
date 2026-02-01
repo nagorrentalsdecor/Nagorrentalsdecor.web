@@ -36,9 +36,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const body = await request.json().catch(() => ({}));
     try {
-        const body = await request.json();
-
         // 1. Prepare data (supporting both camelCase and snake_case for input)
         const dbPayload = {
             name: body.name,
@@ -70,7 +69,6 @@ export async function POST(request: Request) {
         // Fallback to local
         const { getDB, saveDB } = await import('@/lib/db');
         const db = getDB();
-        const body = await request.json().catch(() => ({}));
         const newItem = {
             ...body,
             _id: body._id || Math.random().toString(36).substr(2, 9),

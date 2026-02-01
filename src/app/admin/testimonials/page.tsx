@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash, Search, Quote, Edit } from "lucide-react";
+import { Plus, Trash, Search, Quote, Edit, User, Star, X, Check, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function TestimonialsAdmin() {
@@ -67,7 +67,7 @@ export default function TestimonialsAdmin() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this testimonial?")) return;
+        if (!confirm("Are you sure you want to delete this transmission?")) return;
 
         try {
             const res = await fetch(`/api/testimonials/${id}`, { method: "DELETE" });
@@ -80,121 +80,150 @@ export default function TestimonialsAdmin() {
     };
 
     return (
-        <div>
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-800">Testimonials</h1>
-                    <p className="text-gray-500 text-sm mt-1">Manage client reviews and feedback.</p>
+        <div className="space-y-10">
+            {/* Header Action Bar */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm shadow-slate-200/50">
+                <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shadow-inner">
+                        <Quote size={28} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-black text-slate-900 tracking-tight uppercase">Public Resonance</h2>
+                        <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Verified Client Feedback Registry</p>
+                    </div>
                 </div>
                 <button
                     onClick={() => { setIsAddModalOpen(true); setEditingId(null); setNewTestimonial({ name: "", role: "", content: "" }); }}
-                    className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-xl active:scale-95"
+                    className="flex items-center px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-slate-800 shadow-xl shadow-slate-200 transition-all active:scale-95"
                 >
-                    <Plus size={18} />
-                    <span>Add Review</span>
+                    <Plus size={18} className="mr-2" />
+                    Archive New Entry
                 </button>
             </div>
 
-            {/* List */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {testimonials.map((t) => (
-                    <motion.div
-                        key={t._id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative group"
-                    >
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                                    {(t.initial || (t.name ? t.name[0] : "?"))}
+            {/* Testimonials Dashboard */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <AnimatePresence mode="popLayout">
+                    {testimonials.map((t, idx) => (
+                        <motion.div
+                            key={t._id}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ delay: idx * 0.05 }}
+                            className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm shadow-slate-200/50 relative group overflow-hidden"
+                        >
+                            <div className="absolute -top-4 -right-4 p-8 text-primary/5 group-hover:scale-110 transition-transform duration-700">
+                                <Quote size={100} />
+                            </div>
+
+                            <div className="flex justify-between items-start mb-8 relative z-10">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-14 h-14 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-lg shadow-xl shadow-slate-200">
+                                        {(t.name ? t.name[0] : "?").toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <h3 className="font-black text-slate-900 tracking-tight text-lg">{t.name}</h3>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{t.role || "Client"}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-gray-800">{t.name}</h3>
-                                    <p className="text-xs text-gray-500 uppercase">{t.role}</p>
+                                <div className="flex gap-2 translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                                    <button
+                                        onClick={() => handleEdit(t)}
+                                        className="p-3 bg-white text-slate-400 hover:text-primary hover:bg-slate-50 rounded-2xl shadow-xl border border-slate-100 active:scale-90"
+                                    >
+                                        <Edit size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(t._id)}
+                                        className="p-3 bg-white text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-2xl shadow-xl border border-slate-100 active:scale-90"
+                                    >
+                                        <Trash size={16} />
+                                    </button>
                                 </div>
                             </div>
-                            <div className="flex gap-1">
-                                <button
-                                    onClick={() => handleEdit(t)}
-                                    className="text-gray-300 hover:text-blue-500 transition-colors p-2"
-                                >
-                                    <Edit size={16} />
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(t._id)}
-                                    className="text-gray-300 hover:text-red-500 transition-colors p-2"
-                                >
-                                    <Trash size={16} />
-                                </button>
+                            <div className="flex gap-1 mb-4 text-amber-400">
+                                {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
                             </div>
-                        </div>
-                        <p className="text-gray-600 text-sm italic leading-relaxed">"{t.content}"</p>
-                    </motion.div>
-                ))}
+                            <p className="text-slate-600 text-[13px] font-medium leading-relaxed italic relative z-10">
+                                "{t.content}"
+                            </p>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
             </div>
 
-            {/* Add/Edit Modal */}
+            {/* Entry Portal Modal */}
             <AnimatePresence>
                 {isAddModalOpen && (
-                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={closeModal}
+                            className="absolute inset-0 bg-slate-900/40 backdrop-blur-xl"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 30 }}
+                            className="bg-white w-full max-w-lg rounded-[3rem] p-10 shadow-2xl relative border border-slate-100"
                         >
-                            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                                <h3 className="font-bold text-lg text-gray-800">{editingId ? "Edit Testimonial" : "Add New Testimonial"}</h3>
-                                <button onClick={closeModal} className="text-gray-400 hover:text-gray-600">
-                                    <Plus size={24} className="rotate-45" />
+                            <div className="flex justify-between items-center mb-10 border-b border-slate-50 pb-8">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                                        <Quote size={28} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">{editingId ? "Refine entry" : "New entry"}</h2>
+                                        <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-1">Feedback Registry Sys</p>
+                                    </div>
+                                </div>
+                                <button onClick={closeModal} className="p-3 rounded-2xl hover:bg-slate-50 text-slate-300 hover:text-slate-900 transition-colors">
+                                    <X size={24} />
                                 </button>
                             </div>
-                            <div className="p-6 space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Client Name</label>
-                                    <input
-                                        type="text"
-                                        value={newTestimonial.name}
-                                        onChange={(e) => setNewTestimonial({ ...newTestimonial, name: e.target.value })}
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                        placeholder="e.g. Sarah Osei"
-                                    />
+
+                            <div className="space-y-8">
+                                <div className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Source Name</label>
+                                        <input
+                                            type="text"
+                                            value={newTestimonial.name}
+                                            onChange={(e) => setNewTestimonial({ ...newTestimonial, name: e.target.value })}
+                                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:border-primary/30 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all text-sm font-black text-slate-900"
+                                            placeholder="Sarah Osei"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Source Role</label>
+                                        <input
+                                            type="text"
+                                            value={newTestimonial.role}
+                                            onChange={(e) => setNewTestimonial({ ...newTestimonial, role: e.target.value })}
+                                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:border-primary/30 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all text-sm font-black text-slate-900"
+                                            placeholder="Vercel Executive"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Resonance Payload</label>
+                                        <textarea
+                                            value={newTestimonial.content}
+                                            onChange={(e) => setNewTestimonial({ ...newTestimonial, content: e.target.value })}
+                                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:border-primary/30 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all text-sm font-black text-slate-900 h-32 resize-none"
+                                            placeholder="Write the public feedback here..."
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Role / Event Type</label>
-                                    <input
-                                        type="text"
-                                        value={newTestimonial.role}
-                                        onChange={(e) => setNewTestimonial({ ...newTestimonial, role: e.target.value })}
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                        placeholder="e.g. Bride"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Review Content</label>
-                                    <textarea
-                                        value={newTestimonial.content}
-                                        onChange={(e) => setNewTestimonial({ ...newTestimonial, content: e.target.value })}
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all h-32 resize-none"
-                                        placeholder="Write the testimonial here..."
-                                    />
-                                </div>
-                            </div>
-                            <div className="p-6 border-t border-gray-100 flex justify-end gap-3 bg-gray-50">
-                                <button
-                                    onClick={closeModal}
-                                    className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
-                                >
-                                    Cancel
-                                </button>
                                 <button
                                     onClick={handleSaveTestimonial}
                                     disabled={isLoading}
-                                    className="px-6 py-2 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+                                    className="w-full bg-slate-900 text-white py-5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] hover:bg-slate-800 shadow-xl shadow-slate-200 transition-all active:scale-95 flex items-center justify-center"
                                 >
-                                    {isLoading ? "Saving..." : (editingId ? "Update Review" : "Save Review")}
+                                    {isLoading ? <Loader2 className="animate-spin mr-2" size={16} /> : <Check className="mr-2" size={16} />}
+                                    {isLoading ? "Synchronizing..." : (editingId ? "Update Entry" : "Commit Entry")}
                                 </button>
                             </div>
                         </motion.div>

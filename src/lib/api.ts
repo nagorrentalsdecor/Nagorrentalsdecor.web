@@ -1,9 +1,37 @@
 "use client";
 
 // Helper for API requests
+// Basic in-memory cache for faster responses
+const apiCache: Record<string, { data: any, timestamp: number }> = {};
+const CACHE_TTL = 300000; // 5 minutes
+
 const request = async (url: string, options?: RequestInit) => {
+    // Check cache for GET requests
+    const isGet = !options || options.method === "GET" || options.method === undefined;
+
+    if (isGet && apiCache[url]) {
+        const cached = apiCache[url];
+        if (Date.now() - cached.timestamp < CACHE_TTL) {
+            console.log(`[API Cache] Returning cached data for ${url}`, cached.data);
+            // Return cached data immediately if it's fresh enough
+            // But we'll still fetch in background to "revalidate"
+            fetch(url, { ...options, cache: "no-store" })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(`[API Cache] Background revalidation for ${url}`, data);
+                    // Only cache non-empty arrays
+                    if (!Array.isArray(data) || data.length > 0) {
+                        apiCache[url] = { data, timestamp: Date.now() };
+                    }
+                })
+                .catch(() => { });
+
+            return cached.data;
+        }
+    }
+
     try {
-        // Merge options with cache: 'no-store' to prevent caching issues in Admin
+        console.log(`[API Request] Fetching ${url}`);
         const response = await fetch(url, { cache: "no-store", ...options });
 
         if (!response.ok) {
@@ -11,7 +39,24 @@ const request = async (url: string, options?: RequestInit) => {
             throw new Error(errorData.error || "API Request Failed");
         }
 
-        return await response.json();
+        const data = await response.json();
+        console.log(`[API Response] ${url}`, data);
+
+        // Cache successful GET requests (but not empty arrays)
+        if (isGet) {
+            if (!Array.isArray(data) || data.length > 0) {
+                console.log(`[API Cache] Caching data for ${url}`);
+                apiCache[url] = { data, timestamp: Date.now() };
+            } else {
+                console.log(`[API Cache] Skipping cache for empty array at ${url}`);
+            }
+        } else {
+            // Invalidate cache for POST/PUT/DELETE
+            console.log('[API Cache] Invalidating all cache');
+            Object.keys(apiCache).forEach(key => delete apiCache[key]);
+        }
+
+        return data;
     } catch (error) {
         console.error("API Error:", error);
         throw error;
