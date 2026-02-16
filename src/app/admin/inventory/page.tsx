@@ -58,6 +58,7 @@ export default function InventoryPage() {
     const [formData, setFormData] = useState({
         name: "",
         category: "Chairs",
+        customCategory: "",
         pricePerDay: "",
         quantity: "",
         images: ["/images/chair-gold.png"]
@@ -77,12 +78,19 @@ export default function InventoryPage() {
             );
         }
         if (categoryFilter !== "All") {
-            // Relaxed filtering: Case-insensitive & Partial Match for Singular/Plural
-            const filterNorm = categoryFilter.toLowerCase().replace(/s$/, "");
+            const standardCategories = categories.filter(c => c !== "All" && c !== "Others").map(c => c.toLowerCase());
+
             result = result.filter(item => {
                 if (!item.category) return false;
-                const itemNorm = item.category.toLowerCase().replace(/s$/, "");
-                return itemNorm === filterNorm || item.category === categoryFilter;
+                const itemCat = item.category.toLowerCase();
+
+                if (categoryFilter === "Others") {
+                    return !standardCategories.includes(itemCat);
+                }
+
+                const filterNorm = categoryFilter.toLowerCase().replace(/s$/, "");
+                const itemNorm = itemCat.replace(/s$/, "");
+                return itemNorm === filterNorm || itemCat === categoryFilter.toLowerCase();
             });
         }
         setFilteredItems(result);
@@ -123,6 +131,7 @@ export default function InventoryPage() {
             setFormData({
                 name: "",
                 category: "Chairs",
+                customCategory: "",
                 pricePerDay: "",
                 quantity: "",
                 images: ["/images/chair-gold.png"]
@@ -148,9 +157,11 @@ export default function InventoryPage() {
         try {
             const dataToSubmit = {
                 ...formData,
+                category: formData.category === "Others" ? formData.customCategory : formData.category,
                 pricePerDay: Number(formData.pricePerDay),
                 quantity: Number(formData.quantity)
             };
+            delete (dataToSubmit as any).customCategory;
             if (editingItem) {
                 await updateItem(editingItem._id || editingItem.id, dataToSubmit);
             } else {
@@ -170,7 +181,7 @@ export default function InventoryPage() {
     const totalValue = items.reduce((acc, item) => acc + (Number(item.pricePerDay || 0) * Number(item.quantity || 0)), 0);
     const lowStock = items.filter(item => Number(item.quantity || 0) < 5).length;
 
-    const categories = ["All", "Chairs", "Tents", "Tables", "Lighting", "Backdrops", "Flooring", "Decor", "Tableware", "Kitchen ware", "Flowers", "Systems", "Electronics"];
+    const categories = ["All", "Chairs", "Tents", "Tables", "Lighting", "Backdrops", "Flooring", "Decor", "Tableware", "Kitchen ware", "Flowers", "Systems", "Electronics", "Others"];
 
     return (
         <div className="space-y-10 pb-20">
@@ -537,6 +548,19 @@ export default function InventoryPage() {
                                                             {categories.filter(c => c !== "All").map(cat => <option key={cat} value={cat}>{cat}</option>)}
                                                         </select>
                                                     </div>
+                                                    {formData.category === "Others" && (
+                                                        <div className="col-span-2">
+                                                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">Specify Other Category</label>
+                                                            <input
+                                                                required
+                                                                type="text"
+                                                                className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-[1.25rem] focus:bg-white focus:border-primary/30 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all text-sm font-bold text-slate-900"
+                                                                placeholder="e.g. Stage Equipment"
+                                                                value={formData.customCategory}
+                                                                onChange={(e) => setFormData({ ...formData, customCategory: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    )}
                                                     <div>
                                                         <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">Rate (GH₵)</label>
                                                         <input

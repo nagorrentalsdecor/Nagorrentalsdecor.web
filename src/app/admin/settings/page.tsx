@@ -1,9 +1,10 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Save, Bell, Globe, Lock, Loader2, Smartphone, User, Plus, Trash2, Key, X, Copy, Edit2, Shield, Settings, Server, Users, AlertTriangle, CheckCircle } from "lucide-react";
+import { Save, Bell, Globe, Lock, Loader2, Smartphone, User, Plus, Trash2, Key, X, Copy, Edit2, Shield, Settings, Server, Users, AlertTriangle, CheckCircle, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getSettings, updateSettings } from "@/lib/api";
+import * as XLSX from "xlsx";
 
 export default function SettingsPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -33,13 +34,60 @@ export default function SettingsPage() {
         try {
             const res = await fetch('/api/admin/backup');
             const data = await res.json();
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `nagor_backup_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-        } catch (e) { console.error(e); alert("Backup failed"); }
+
+            // Create a new workbook
+            const wb = XLSX.utils.book_new();
+
+            // Add Inventory Sheet
+            if (data.items) {
+                const itemsData = data.items.map((it: any) => ({
+                    ID: it._id || it.id,
+                    Name: it.name,
+                    Category: it.category,
+                    PricePerDay: it.pricePerDay,
+                    Quantity: it.quantity,
+                    CreatedAt: it.createdAt
+                }));
+                const wsItems = XLSX.utils.json_to_sheet(itemsData);
+                XLSX.utils.book_append_sheet(wb, wsItems, "Inventory");
+            }
+
+            // Add Bookings Sheet
+            if (data.bookings) {
+                const bookingsData = data.bookings.map((b: any) => ({
+                    ID: b._id || b.id,
+                    Customer: b.customerName,
+                    Phone: b.customerPhone,
+                    Email: b.customerEmail,
+                    Date: b.date,
+                    ReturnDate: b.returnDate,
+                    Status: b.status,
+                    Total: b.total,
+                    Items: (b.items || []).map((i: any) => `${i.name} (${i.quantity})`).join(", ")
+                }));
+                const wsBookings = XLSX.utils.json_to_sheet(bookingsData);
+                XLSX.utils.book_append_sheet(wb, wsBookings, "Bookings");
+            }
+
+            // Add Services Sheet
+            if (data.packages) {
+                const packagesData = data.packages.map((p: any) => ({
+                    ID: p._id || p.id,
+                    Name: p.name,
+                    Description: p.description,
+                    Price: p.price
+                }));
+                const wsPackages = XLSX.utils.json_to_sheet(packagesData);
+                XLSX.utils.book_append_sheet(wb, wsPackages, "Services");
+            }
+
+            // Trigger download
+            XLSX.writeFile(wb, `nagor_system_backup_${new Date().toISOString().split('T')[0]}.xlsx`);
+
+        } catch (e) {
+            console.error(e);
+            alert("Backup failed");
+        }
     };
 
     const handleRestore = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,22 +99,90 @@ export default function SettingsPage() {
         const reader = new FileReader();
         reader.onload = async (event) => {
             try {
-                const data = JSON.parse(event.target?.result as string);
+                let backupData: any = {};
+
+                if (file.name.endsWith('.xlsx')) {
+                    const data = new Uint8Array(event.target?.result as ArrayBuffer);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    // Parse Inventory
+                    if (workbook.Sheets["Inventory"]) {
+                        backupData.items = XLSX.utils.sheet_to_json(workbook.Sheets["Inventory"]).map((it: any) => ({
+                            _id: it.ID,
+                            name: it.Name,
+                            category: it.Category,
+                            pricePerDay: it.PricePerDay,
+                            quantity: it.Quantity,
+                            createdAt: it.CreatedAt,
+                            images: ["/images/chair-gold.png"] // Default placeholder as images aren't in Excel
+                        }));
+                    }
+
+                    // Parse Bookings
+                    if (workbook.Sheets["Bookings"]) {
+                        backupData.bookings = XLSX.utils.sheet_to_json(workbook.Sheets["Bookings"]).map((b: any) => {
+                            const itemsStr = b.Items || "";
+                            const parsedItems = itemsStr.split(", ").filter(Boolean).map((s: string) => {
+                                const match = s.match(/(.*) \((\d+)\)/);
+                                return match ? { name: match[1], quantity: Number(match[2]) } : { name: s, quantity: 1 };
+                            });
+
+                            return {
+                                _id: b.ID,
+                                customerName: b.Customer,
+                                customerPhone: b.Phone,
+                                customerEmail: b.Email,
+                                date: b.Date,
+                                returnDate: b.ReturnDate,
+                                status: b.Status,
+                                total: b.Total,
+                                items: parsedItems
+                            };
+                        });
+                    }
+
+                    // Parse Services
+                    if (workbook.Sheets["Services"]) {
+                        backupData.packages = XLSX.utils.sheet_to_json(workbook.Sheets["Services"]).map((p: any) => ({
+                            _id: p.ID,
+                            name: p.Name,
+                            description: p.Description,
+                            price: p.Price,
+                            images: ["/images/wedding.png"]
+                        }));
+                    }
+                } else {
+                    backupData = JSON.parse(event.target?.result as string);
+                }
+
+                if (!backupData.items || !backupData.bookings) {
+                    throw new Error("Invalid backup structure");
+                }
+
                 const res = await fetch('/api/admin/backup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(backupData)
                 });
+
                 if (res.ok) {
-                    alert("System restored successfully!");
+                    alert("System restored successfully from " + (file.name.endsWith('.xlsx') ? "Excel" : "JSON") + "!");
                     window.location.reload();
                 } else {
                     const err = await res.json();
                     alert("Restore failed: " + err.error);
                 }
-            } catch (e) { alert("Invalid file format"); }
+            } catch (e) {
+                console.error(e);
+                alert("Invalid file format or structure. Please use a valid Nagor backup file.");
+            }
         };
-        reader.readAsText(file);
+
+        if (file.name.endsWith('.xlsx')) {
+            reader.readAsArrayBuffer(file);
+        } else {
+            reader.readAsText(file);
+        }
     };
 
     const loadData = async () => {
@@ -147,9 +263,10 @@ export default function SettingsPage() {
                         </div>
                         <button
                             onClick={handleBackup}
-                            className="px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-all shadow-lg"
+                            className="px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-all shadow-lg flex items-center"
                         >
-                            Download Backup
+                            <Download size={14} className="mr-2" />
+                            Download Excel Backup
                         </button>
                     </div>
 
@@ -164,7 +281,7 @@ export default function SettingsPage() {
                         <div className="relative">
                             <input
                                 type="file"
-                                accept=".json"
+                                accept=".json,.xlsx"
                                 onChange={handleRestore}
                                 className="absolute inset-0 opacity-0 cursor-pointer"
                                 title="Upload backup file"

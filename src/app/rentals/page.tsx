@@ -8,7 +8,7 @@ import ProductCard from "@/components/features/ProductCard";
 import { Search } from "lucide-react";
 
 const RentalsPage = () => {
-    const categories = ["All", "Chairs", "Tents", "Tables", "Lighting", "Backdrops", "Flooring", "Decor", "Tableware", "Kitchen ware", "Flowers", "Systems", "Electronics"];
+    const categories = ["All", "Chairs", "Tents", "Tables", "Lighting", "Backdrops", "Flooring", "Decor", "Tableware", "Kitchen ware", "Flowers", "Systems", "Electronics", "Others"];
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [items, setItems] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -44,7 +44,15 @@ const RentalsPage = () => {
     };
 
     const filteredItems = items.filter(item => {
-        const matchesCategory = selectedCategory === "All" || (item.category || "").toLowerCase() === selectedCategory.toLowerCase();
+        const standardCategories = categories.filter(c => c !== "All" && c !== "Others").map(c => c.toLowerCase());
+        const itemCat = (item.category || "").toLowerCase();
+
+        const matchesCategory = selectedCategory === "All"
+            ? true
+            : selectedCategory === "Others"
+                ? !standardCategories.includes(itemCat)
+                : itemCat === selectedCategory.toLowerCase();
+
         const matchesSearch = (item.name || "").toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
