@@ -6,9 +6,11 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import ServiceCard from "@/components/features/ServiceCard";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { Search } from "lucide-react";
 
 const ServicesPage = () => {
     const [services, setServices] = useState<any[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
     const [siteContent, setSiteContent] = useState<any>(null);
 
     useEffect(() => {
@@ -55,6 +57,11 @@ const ServicesPage = () => {
         show: { opacity: 1, y: 0 }
     };
 
+    const filteredServices = services.filter(s =>
+        (s.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (s.description || "").toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <main className="min-h-screen bg-gray-50">
             <Navbar />
@@ -81,6 +88,30 @@ const ServicesPage = () => {
             </div>
 
             <section className="py-24 container mx-auto px-4">
+                {/* Search Bar */}
+                <div className="max-w-2xl mx-auto mb-16">
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                            <Search className="w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Search services (e.g. Wedding, Birthday, Corporate...)"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-lg"
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery("")}
+                                className="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                <span className="text-sm font-medium">Clear</span>
+                            </button>
+                        )}
+                    </div>
+                </div>
+
                 <motion.div
                     variants={container}
                     initial="show"
@@ -88,7 +119,7 @@ const ServicesPage = () => {
                     viewport={{ once: true, margin: "-100px" }}
                     className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                 >
-                    {services.map((service) => (
+                    {filteredServices.map((service) => (
                         <motion.div key={service._id || service.id} variants={item}>
                             <ServiceCard
                                 title={service.name}
@@ -100,6 +131,21 @@ const ServicesPage = () => {
                         </motion.div>
                     ))}
                 </motion.div>
+
+                {filteredServices.length === 0 && (
+                    <div className="text-center py-20 text-gray-500 bg-white rounded-3xl border border-dashed border-gray-200 mt-8">
+                        <p className="text-xl font-medium mb-2">No services found</p>
+                        <p className="text-gray-400">
+                            We couldn't find any services matching "{searchQuery}"
+                        </p>
+                        <button
+                            onClick={() => setSearchQuery("")}
+                            className="mt-6 text-primary font-bold hover:underline"
+                        >
+                            Clear search and try again
+                        </button>
+                    </div>
+                )}
             </section>
 
             <Footer />

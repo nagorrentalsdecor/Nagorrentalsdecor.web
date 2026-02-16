@@ -5,11 +5,13 @@ import Footer from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/features/ProductCard";
+import { Search } from "lucide-react";
 
 const RentalsPage = () => {
     const categories = ["All", "Chairs", "Tents", "Tables", "Lighting", "Backdrops", "Flooring", "Decor", "Tableware", "Kitchen ware", "Flowers", "Systems", "Electronics"];
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [items, setItems] = useState<any[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
     const [siteContent, setSiteContent] = useState<any>(null);
 
     useEffect(() => {
@@ -41,9 +43,11 @@ const RentalsPage = () => {
         subtitle: "Browse our extensive collection of high-quality event equipment available for rent."
     };
 
-    const filteredItems = selectedCategory === "All"
-        ? items
-        : items.filter(item => (item.category || "").toLowerCase() === selectedCategory.toLowerCase());
+    const filteredItems = items.filter(item => {
+        const matchesCategory = selectedCategory === "All" || (item.category || "").toLowerCase() === selectedCategory.toLowerCase();
+        const matchesSearch = (item.name || "").toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
 
     return (
         <main className="min-h-screen bg-gray-50">
@@ -69,6 +73,30 @@ const RentalsPage = () => {
             </div>
 
             <section className="py-20 container mx-auto px-4">
+                {/* Search Bar */}
+                <div className="max-w-2xl mx-auto mb-12">
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                            <Search className="w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Search rentals (e.g. White Tent, Golden Chair...)"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-lg"
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery("")}
+                                className="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                <span className="text-sm font-medium">Clear</span>
+                            </button>
+                        )}
+                    </div>
+                </div>
+
                 {/* Filter Tabs */}
                 <div className="flex flex-wrap justify-center gap-3 mb-16">
                     {categories.map((cat) => (
@@ -83,6 +111,15 @@ const RentalsPage = () => {
                             {cat}
                         </button>
                     ))}
+                </div>
+
+                {/* Search & Filter Info */}
+                <div className="flex flex-col md:flex-row justify-between items-center mb-8 text-gray-500 text-sm">
+                    <p>
+                        Showing <span className="font-bold text-gray-900">{filteredItems.length}</span> {filteredItems.length === 1 ? 'item' : 'items'}
+                        {searchQuery && <span> matching "<span className="text-primary">{searchQuery}</span>"</span>}
+                        {selectedCategory !== "All" && <span> in <span className="text-primary">{selectedCategory}</span></span>}
+                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -108,8 +145,21 @@ const RentalsPage = () => {
                 </div>
 
                 {filteredItems.length === 0 && (
-                    <div className="text-center py-20 text-gray-500">
-                        <p className="text-lg">No items found in this category.</p>
+                    <div className="text-center py-20 text-gray-500 bg-white rounded-3xl border border-dashed border-gray-200">
+                        <p className="text-xl font-medium mb-2">No items found</p>
+                        <p className="text-gray-400">
+                            {searchQuery
+                                ? `We couldn't find anything matching "${searchQuery}"`
+                                : `No items available in the ${selectedCategory} category.`}
+                        </p>
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery("")}
+                                className="mt-6 text-primary font-bold hover:underline"
+                            >
+                                Clear search and try again
+                            </button>
+                        )}
                     </div>
                 )}
             </section>

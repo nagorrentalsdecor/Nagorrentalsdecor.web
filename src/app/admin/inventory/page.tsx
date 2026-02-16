@@ -68,6 +68,7 @@ export default function InventoryPage() {
     }, []);
 
     useEffect(() => {
+        if (!items) return;
         let result = items;
         if (searchTerm) {
             result = result.filter(item =>
@@ -76,18 +77,34 @@ export default function InventoryPage() {
             );
         }
         if (categoryFilter !== "All") {
-            result = result.filter(item => item.category === categoryFilter);
+            // Relaxed filtering: Case-insensitive & Partial Match for Singular/Plural
+            const filterNorm = categoryFilter.toLowerCase().replace(/s$/, "");
+            result = result.filter(item => {
+                if (!item.category) return false;
+                const itemNorm = item.category.toLowerCase().replace(/s$/, "");
+                return itemNorm === filterNorm || item.category === categoryFilter;
+            });
         }
         setFilteredItems(result);
     }, [searchTerm, categoryFilter, items]);
 
     const fetchItems = async () => {
+        setIsLoading(true);
         try {
             const data = await getItems();
-            setItems(data);
-            setFilteredItems(data);
+            console.log("Fetched Items:", data?.length);
+            if (Array.isArray(data)) {
+                setItems(data);
+                setFilteredItems(data);
+            } else {
+                setItems([]);
+                setFilteredItems([]);
+            }
         } catch (error) {
             console.error("Failed to fetch items", error);
+            setItems([]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -268,7 +285,17 @@ export default function InventoryPage() {
                             </thead>
                             <tbody className="divide-y divide-slate-50">
                                 <AnimatePresence>
-                                    {filteredItems.length === 0 ? (
+                                    {isLoading ? (
+                                        <tr>
+                                            <td colSpan={6} className="px-8 py-24 text-center">
+                                                <div className="flex flex-col items-center justify-center animate-pulse">
+                                                    <div className="w-16 h-16 bg-slate-100 rounded-full mb-4"></div>
+                                                    <div className="h-4 bg-slate-100 rounded w-48 mb-2"></div>
+                                                    <div className="h-3 bg-slate-100 rounded w-32"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : filteredItems.length === 0 ? (
                                         <tr>
                                             <td colSpan={6} className="px-8 py-24 text-center">
                                                 <div className="flex flex-col items-center">
@@ -276,18 +303,24 @@ export default function InventoryPage() {
                                                         <Package size={40} className="text-slate-200" />
                                                     </div>
                                                     <h3 className="text-xl font-bold text-slate-900 uppercase tracking-tight">No Items Found</h3>
-                                                    <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-2">Try a different search term or category</p>
+                                                    <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-2">{categoryFilter !== "All" ? `No ${categoryFilter} found` : 'Try a different search term'}</p>
+                                                    <button
+                                                        onClick={() => { setCategoryFilter("All"); setSearchTerm(""); }}
+                                                        className="mt-6 text-primary font-bold text-sm hover:underline"
+                                                    >
+                                                        Clear Filters
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
                                     ) : (
                                         filteredItems.map((item, idx) => (
                                             <motion.tr
-                                                key={item._id || item.id || idx}
-                                                initial={{ opacity: 0, y: 10 }}
+                                                key={item._id || item.id}
+                                                initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: idx * 0.03 }}
-                                                className="group hover:bg-slate-50/50 transition-colors"
+                                                transition={{ delay: Math.min(idx * 0.03, 0.2) }}
+                                                className="group border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors"
                                             >
                                                 <td className="px-8 py-5">
                                                     <div className="flex items-center gap-4">
@@ -358,7 +391,7 @@ export default function InventoryPage() {
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ delay: idx * 0.05 }}
+                                transition={{ delay: Math.min(idx * 0.03, 0.2) }}
                                 layout
                                 className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/20 transition-all group"
                             >
